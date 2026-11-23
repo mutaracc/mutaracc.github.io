@@ -102,6 +102,7 @@ button:focus-visible{outline:2px solid var(--mom);outline-offset:2px}
 .meta{margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;font-size:11.5px}
 .meta small{display:block;color:var(--dim);font-size:10px;letter-spacing:.1em}
 .mut{color:var(--born)}
+.artonly{display:none!important}
 .simple{margin-top:22px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .simple div{border:1px solid var(--line);border-radius:14px;padding:16px;line-height:1.6;color:var(--mute);font-size:12.5px}
 .simple b{display:block;color:var(--ink);font:700 16px Sora;margin-bottom:4px}
@@ -124,6 +125,8 @@ button:focus-visible{outline:2px solid var(--mom);outline-offset:2px}
 .fam b{color:var(--mom)}
 @media (max-width:760px){.simple{grid-template-columns:1fr}}
 
+.imp{font:600 12px "JetBrains Mono";color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;cursor:pointer}
+.imp:hover{border-color:var(--mom)}
 .nav{display:flex;gap:18px;font:600 12px "JetBrains Mono"}.nav a{text-decoration:none;color:var(--mute)}.nav a:hover{color:var(--ink)}
 @media (max-width:960px){.nav{display:none}}
 
@@ -172,7 +175,7 @@ select:focus,textarea:focus{outline:2px solid var(--born);outline-offset:1px}
     <div class="gb"><small>DECISION HOUR</small><b id="hour" style="font-size:15px">–</b></div>
     <div class="gb"><small>BEST THIS GEN</small><b class="g" id="best">–</b></div>
     <div class="gb"><small>ALIVE / DIED</small><b id="alive">12 / 0</b></div>
-    <button class="go" id="run">Run next generation →</button><button id="stop" hidden>Stop</button>
+    <button class="go" id="run">Run next generation →</button><button id="stop" hidden>Stop</button><button id="exp" class="artonly">Export for mutara.cc</button><label class="artonly imp" for="impf">Import state<input type="file" id="impf" accept=".json,application/json" hidden></label>
   </div>
   <div class="side">
     <div class="card"><h3>THIS GENERATION <span id="pipeAt">–</span></h3><div class="pipe" id="pipe"></div></div>
@@ -236,8 +239,8 @@ select:focus,textarea:focus{outline:2px solid var(--born);outline-offset:1px}
     <div class="step"><small>REVEAL · BREED</small><b>The next 24 hours decide</b><p>Real candles play out. The three weakest die. Claude writes three children, mixing their parents' beliefs with one mutation.</p></div>
   </div>
   <div class="honest">
-    <div><b>What is real</b>Hourly candles and round trip costs from KyberSwap quotes on Robinhood Chain mainnet, taken the morning of Nov 23. When the AI minds go live, every thought and child DNA will be written by Claude on the Mutara server, every 6 hours, and published here.</div>
-    <div><b>What is not (yet)</b>No money moves. Until the AI minds go live, this page runs a simple rule stand-in in your browser, labelled as such. Generations replay the last week of real candles. The on-chain seal is a concept.</div>
+    <div><b>What is real</b>Hourly candles and round trip costs from KyberSwap quotes on Robinhood Chain mainnet, taken the morning of Nov 23. Every thought and child DNA in the published generations was written by Claude. Each update shows its time in the top bar.</div>
+    <div><b>What is not (yet)</b>No money moves. Rows marked rule stand-in were decided by a simple rule, not by AI. Generations are published by hand for now, automatic runs come next. Generations replay the last week of real candles. The on-chain seal is a concept.</div>
   </div>
 </section>
 <footer>Mutara (working name) · preview · practice mode only, not financial advice</footer>
@@ -268,7 +271,7 @@ const SEED = [
   ["Zeta", "bold", "sniper", "I do nothing most hours. Only a 1% jump in one hour wakes me, and then I go big."],
   ["Pell", "bold", "mom", "I buy breakouts: markets trading within 0.5% of their 24-hour high, before everyone notices."],
 ];
-let nid = 0, gen = 0, died = 0, A = [], log = [], sel = null, thinking = false, abortC = null, sample = null, aiOn = false;
+let siteState = null, nid = 0, gen = 0, died = 0, A = [], log = [], sel = null, thinking = false, abortC = null, sample = null, aiOn = false;
 const look = (m) => ({ st: m.temper === "bold" ? "mom" : "dip", sig: 0.6 + ((m.id.charCodeAt(0) * 7 + m.id.length * 13) % 30) / 10, mk: [0, 1, 2].slice(0, 2 + (m.id.length % 2)) });
 function mind(name, temper, tag, genome, parents = [], mutation = "") { const m = { id: `${name}-${++nid}`, temper, tag, genome, parents, mutation, born: gen, score: null, prior: null, last: null, thought: "", picks: [], by: "" }; m.dna = look(m); (globalThis.__ALL ||= []).push(m); return m; }
 SEED.forEach(([n, t, g, s]) => A.push(mind(n, t, g, s)));
@@ -391,7 +394,7 @@ function render() {
    ${m.mutation ? `<div style="grid-column:1/-1"><small>MUTATION</small><span class="mut">${esc(m.mutation)}</span></div>` : ""}</div>`;
   $("log").innerHTML = log.map((l) => `<div class="${l.cls}">${esc(l.t)}</div>`).join("");
 }
-function setMode() { const el = $("mode"); el.className = "mode " + (aiOn ? "ai" : "off"); el.textContent = aiOn ? "● AI MINDS: CLAUDE" : "● AI MINDS START SOON · RULE STAND-IN"; $("run").textContent = aiOn ? "Run next generation with AI →" : "Run next generation →"; }
+function setMode() { const el = $("mode"); el.className = "mode " + (aiOn ? "ai" : "off"); el.textContent = aiOn ? "● AI MINDS: CLAUDE" : siteState ? "● AI MINDS: CLAUDE · UPDATED " + siteState.at.slice(5, 16).replace("T", " ") + " UTC" : "● AI MINDS START SOON · RULE STAND-IN"; if (siteState) el.className = "mode ai"; $("run").textContent = aiOn ? "Run next generation with AI →" : "Run next generation →"; }
 $("run").onclick = () => runGen();
 $("stop").onclick = () => abortC?.abort();
 // ---------- the helix: every agent is a node on one living strand of DNA ----------
@@ -522,7 +525,7 @@ Reply with only one JSON object: {"thought":"one sentence, max 25 words, first p
   const d = await sample.json(prompt, { signal: labCtl.signal, cache: false, modelTier: tier }); const g = gate(d || {}), out = reveal(g.picks, r.t);
   return { thought: String(d?.thought || "").slice(0, 240), res: out.res, ret: out.ret, notes: g.notes }; }
 const TIER = { quick: "Quick", default: "Standard", complex: "Deep" };
-async function labRun(tiers) { const m = A.find((x) => x.id === $("labMind").value); if (!m || !sample || !aiOn) { $("labNote").textContent = "The Mutation Lab opens when the AI minds go live on mutara.cc."; return; }
+async function labRun(tiers) { const m = A.find((x) => x.id === $("labMind").value); if (!m || !sample || !aiOn) { $("labNote").textContent = "The Mutation Lab runs in the Mutara preview with Claude. Results of new runs are published here."; return; }
   const dna = $("labDna").value.trim().slice(0, 500); if (!dna) return; labCtl = new AbortController(); $("labRun").disabled = $("labRace").disabled = true;
   const muts = tiers.map((t) => ({ title: "MUTANT · " + TIER[t], sub: dna === m.genome ? "same DNA, new AI run" : `"${dna.slice(0, 90)}${dna.length > 90 ? "…" : ""}"`, thought: "Thinking…", res: [], ret: 0, err: true })); labShow(m, muts);
   $("labNote").textContent = `Replaying ${rec(m).when} UTC with ${tiers.length} AI call${tiers.length > 1 ? "s" : ""}…`;
@@ -533,7 +536,24 @@ $("chips").querySelectorAll(".chip").forEach((c) => c.onclick = () => { $("labDn
 $("labMind").onchange = labPick; $("labReset").onclick = labPick;
 $("labRun").onclick = () => labRun([$("labTier").value]); $("labRace").onclick = () => labRun(["quick", "default", "complex"]);
 
-setMode(); $("mode").textContent = "CHECKING AI…"; await runGen(true); labOptions(); labPick(); renderTree();
+// ---------- save and restore the whole population (export from the preview, shown on mutara.cc) ----------
+function snapshot() { return { kind: "mutara-state", v: 1, at: new Date().toISOString(), gen, died, nid, A, ALL: globalThis.__ALL, BENCH, log, seal: $("hash").textContent, by: A[0]?.by || "" }; }
+function restore(s) {
+  if (!s || s.kind !== "mutara-state") throw new Error("not a Mutara state file");
+  for (const b of bodies.values()) { DNA.remove(b); b.userData.lab.remove(); } bodies.clear();
+  gen = s.gen; died = s.died; nid = s.nid; globalThis.__ALL.length = 0; globalThis.__ALL.push(...s.ALL);
+  const byId = new Map(globalThis.__ALL.map((m) => [m.id, m])); A = s.A.map((m) => byId.get(m.id) || m);
+  BENCH.length = 0; BENCH.push(...(s.BENCH || [])); log = s.log || []; $("hash").textContent = s.seal || "–";
+  for (const a of A) { const b = creature(a); bodies.set(a.id, b); b.position.copy(rankPos(A.indexOf(a))); }
+  for (const k of STEPS) step(k[0], "done", k[0] === "read" ? "saved " + s.at.slice(0, 16).replace("T", " ") + " UTC" : ""); $("pipeAt").textContent = `G${gen} · restored`;
+  render(); renderBench(); renderTree(); labOptions(); labPick(); }
+$("exp").onclick = async () => { const dl = window.claude ? await window.claude.use("downloads") : null; if (!dl) { note("g", "export unavailable in this view"); render(); return; }
+  try { await dl.save({ filename: "state.json", data: JSON.stringify(snapshot()) }); note("g", "exported state.json · upload it to the mutaracc.github.io repository"); } catch (e) { note("g", `export ${e.code === "declined" ? "cancelled" : "failed (" + e.code + ")"}`); } render(); };
+$("impf").onchange = async (e) => { const f = e.target.files?.[0]; if (!f) return; try { restore(JSON.parse(await f.text())); note("g", `imported ${f.name} · continuing from G${gen}`); } catch (err) { note("g", "import failed: " + err.message); } render(); e.target.value = ""; };
+
+try { const r = await fetch("./state.json?t=" + Date.now(), { cache: "no-store" }); if (r.ok) siteState = await r.json(); } catch {}
+setMode(); $("mode").textContent = "LOADING…"; await runGen(true); labOptions(); labPick(); renderTree();
+if (siteState) { try { restore(siteState); $("run").hidden = true; } catch { siteState = null; } } setMode();
 (async () => { try { sample = window.claude ? await window.claude.use("sample") : null; } catch { sample = null; } aiOn = !!sample; setMode(); })();
 </script>
 </body>
