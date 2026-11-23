@@ -39,7 +39,7 @@ header{position:absolute;inset:0 0 auto 0;z-index:5;display:flex;align-items:cen
 .hero h1{margin:12px 0 0;font:800 54px/0.98 Sora;letter-spacing:-.045em}
 .hero h1 em{font-style:normal;background:linear-gradient(90deg,var(--mom),var(--born));-webkit-background-clip:text;color:transparent}
 .hero p{margin:14px 0 0;color:var(--mute);line-height:1.6;max-width:400px}
-.genbar{position:absolute;left:24px;bottom:24px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.genbar{position:absolute;left:24px;right:400px;bottom:24px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .gb{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;backdrop-filter:blur(8px)}
 .gb small{display:block;font-size:10px;letter-spacing:.14em;color:var(--dim)}
 .gb b{font:700 20px Sora}
@@ -107,6 +107,8 @@ button:focus-visible{outline:2px solid var(--mom);outline-offset:2px}
 .meta small{display:block;color:var(--dim);font-size:10px;letter-spacing:.1em}
 .mut{color:var(--born)}
 .artonly{display:none!important}
+.sealbox{margin-top:10px;padding:10px 12px;border:1px solid rgba(255,211,107,.35);border-radius:10px;font-size:11.5px;line-height:1.55;color:var(--ink)}
+.sealbox .row2{display:flex;gap:8px;margin-top:8px}#onchain a{color:var(--mom)}
 .simple{margin-top:22px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .simple div{border:1px solid var(--line);border-radius:14px;padding:16px;line-height:1.6;color:var(--mute);font-size:12.5px}
 .simple b{display:block;color:var(--ink);font:700 16px Sora;margin-bottom:4px}
@@ -186,7 +188,7 @@ select:focus,textarea:focus{outline:2px solid var(--born);outline-offset:1px}
     <div class="card"><h3>LEADERBOARD <span>score remembers past gens</span></h3><table id="board"></table></div>
     <div class="card"><h3>MIND <span id="mindName">–</span></h3><div id="mind"></div></div>
     <div class="card"><h3>EVOLUTION LOG <span>newest first</span></h3><div class="log" id="log"></div></div>
-    <div class="card"><h3>SEAL <span class="tag">ON CHAIN: CONCEPT</span></h3><div class="hash" id="hash">–</div><div style="margin-top:8px;color:var(--dim);font-size:11px;line-height:1.5">sha256 of every mind's thought and picks, computed before the outcome is revealed. Plan: written on chain each generation.</div></div>
+    <div class="card"><h3>SEAL <span class="tag">ROBINHOOD CHAIN MAINNET</span></h3><div class="hash" id="onchain">Checking the seal…</div><div class="sealbox" id="sealBox" hidden></div><button id="sealBtn" class="go" hidden style="margin-top:10px">Seal this state on chain</button><div class="hash" id="hash" style="margin-top:10px">–</div><div style="margin-top:8px;color:var(--dim);font-size:11px;line-height:1.5">The sha256 of this exact state.json is written into a Robinhood Chain transaction. Anyone can recompute it: if one thought or score were edited later, it would no longer match.</div></div>
   </div>
 </div>
 
@@ -275,7 +277,7 @@ const SEED = [
   ["Zeta", "bold", "sniper", "I do nothing most hours. Only a 1% jump in one hour wakes me, and then I go big."],
   ["Pell", "bold", "mom", "I buy breakouts: markets trading within 0.5% of their 24-hour high, before everyone notices."],
 ];
-let siteState = null, nid = 0, gen = 0, died = 0, A = [], log = [], sel = null, thinking = false, abortC = null, sample = null, aiOn = false;
+let siteState = null, siteStateText = null, nid = 0, gen = 0, died = 0, A = [], log = [], sel = null, thinking = false, abortC = null, sample = null, aiOn = false;
 const look = (m) => ({ st: m.temper === "bold" ? "mom" : "dip", sig: 0.6 + ((m.id.charCodeAt(0) * 7 + m.id.length * 13) % 30) / 10, mk: [0, 1, 2].slice(0, 2 + (m.id.length % 2)) });
 function mind(name, temper, tag, genome, parents = [], mutation = "") { const m = { id: `${name}-${++nid}`, temper, tag, genome, parents, mutation, born: gen, score: null, prior: null, last: null, thought: "", picks: [], by: "" }; m.dna = look(m); (globalThis.__ALL ||= []).push(m); return m; }
 SEED.forEach(([n, t, g, s]) => A.push(mind(n, t, g, s)));
@@ -555,9 +557,50 @@ $("exp").onclick = async () => { const dl = window.claude ? await window.claude.
   try { await dl.save({ filename: "state.json", data: JSON.stringify(snapshot()) }); note("g", "exported state.json · upload it to the mutaracc.github.io repository"); } catch (e) { note("g", `export ${e.code === "declined" ? "cancelled" : "failed (" + e.code + ")"}`); } render(); };
 $("impf").onchange = async (e) => { const f = e.target.files?.[0]; if (!f) return; try { restore(JSON.parse(await f.text())); note("g", `imported ${f.name} · continuing from G${gen}`); } catch (err) { note("g", "import failed: " + err.message); } render(); e.target.value = ""; };
 
-try { const r = await fetch("./state.json?t=" + Date.now(), { cache: "no-store" }); if (r.ok) siteState = await r.json(); } catch {}
+try { const r = await fetch("./state.json?t=" + Date.now(), { cache: "no-store" }); if (r.ok) { siteStateText = await r.text(); siteState = JSON.parse(siteStateText); } } catch {}
 setMode(); $("mode").textContent = "LOADING…"; await runGen(true); labOptions(); labPick(); renderTree();
 if (siteState) { try { restore(siteState); $("run").hidden = true; } catch { siteState = null; } } setMode();
+
+// ---------- on-chain seal: sha256 of state.json in a 0 ETH self-transfer on Robinhood Chain mainnet ----------
+const SRPC = "https://rpc.mainnet.chain.robinhood.com", SCHAIN = "0x1237", SEXP = "https://robinhoodchain.blockscout.com", SPREFIX = "4d55544152413a"; // "MUTARA:"
+let stateSha = null, seals = [];
+async function srpc(m, p) { const r = await fetch(SRPC, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: m, params: p }) }); const j = await r.json(); if (j.error) throw new Error(j.error.message); return j.result; }
+async function shaHex(t) { const h = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(t)); return [...new Uint8Array(h)].map((x) => x.toString(16).padStart(2, "0")).join(""); }
+async function verifySeal() { const el = $("onchain");
+  if (!siteStateText) { el.textContent = "Nothing published yet to seal."; return; }
+  stateSha = await shaHex(siteStateText);
+  try { const r = await fetch("./seals.json?t=" + Date.now(), { cache: "no-store" }); if (r.ok) seals = await r.json(); } catch {}
+  const hit = seals.find((s) => s.sha === stateSha);
+  if (!hit) { el.innerHTML = `This state is not sealed yet.<br>sha256 ${stateSha.slice(0, 20)}…`; $("sealBtn").hidden = false; return; }
+  try { const [tx, rc] = await Promise.all([srpc("eth_getTransactionByHash", [hit.tx]), srpc("eth_getTransactionReceipt", [hit.tx])]);
+    const ok = tx && rc && rc.status === "0x1" && tx.input.toLowerCase() === "0x" + SPREFIX + stateSha && tx.to && tx.from.toLowerCase() === tx.to.toLowerCase();
+    if (!ok) { el.textContent = "✗ The seal record does not match the chain."; return; }
+    const blk = await srpc("eth_getBlockByNumber", [rc.blockNumber, false]);
+    el.innerHTML = `✓ Sealed on Robinhood Chain mainnet · block ${parseInt(rc.blockNumber, 16).toLocaleString("en-US")} · ${new Date(parseInt(blk.timestamp, 16) * 1000).toISOString().slice(0, 16).replace("T", " ")} UTC<br><a href="${SEXP}/tx/${hit.tx}" target="_blank" rel="noopener">${hit.tx.slice(0, 20)}…</a>`;
+  } catch { el.textContent = "Could not reach Robinhood Chain to check the seal."; } }
+$("sealBtn").onclick = async () => { const w = window.okxwallet || window.ethereum, box = $("sealBox"); box.hidden = false;
+  if (!w) { box.textContent = "Open mutara.cc in a browser with a wallet (OKX, MetaMask) to seal."; return; }
+  try { box.textContent = "Connecting wallet…"; const [from] = await w.request({ method: "eth_requestAccounts" });
+    try { await w.request({ method: "wallet_switchEthereumChain", params: [{ chainId: SCHAIN }] }); }
+    catch (e) { if (e.code === 4902) await w.request({ method: "wallet_addEthereumChain", params: [{ chainId: SCHAIN, chainName: "Robinhood Chain", rpcUrls: [SRPC], nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 }, blockExplorerUrls: [SEXP] }] }); else throw e; }
+    const tx = { from, to: from, value: "0x0", data: "0x" + SPREFIX + stateSha };
+    box.textContent = "Simulating on Robinhood Chain mainnet…";
+    const sim = await srpc("eth_simulateV1", [{ blockStateCalls: [{ calls: [tx] }], validation: false }, "latest"]), c = sim[0].calls[0];
+    if (c.status !== "0x1") throw new Error("simulation failed, nothing was signed");
+    const gas = parseInt(c.gasUsed, 16), price = BigInt(await srpc("eth_gasPrice", [])), fee = Number(BigInt(gas) * price) / 1e18;
+    box.innerHTML = `<b>Simulated ✓</b> You send <b>0 ETH to yourself</b> (${from.slice(0, 6)}…${from.slice(-4)}) on Robinhood Chain mainnet. The data field is "MUTARA:" + the sha256 of this state.json. Network fee about ${fee.toPrecision(2)} ETH.<div class="row2"><button class="go" id="sealYes">Sign seal</button><button id="sealNo">Cancel</button></div>`;
+    $("sealNo").onclick = () => { box.hidden = true; };
+    $("sealYes").onclick = async () => { try { box.textContent = "Confirm in your wallet…";
+      const hash = await w.request({ method: "eth_sendTransaction", params: [{ ...tx, gas: "0x" + Math.ceil(gas * 1.3).toString(16) }] });
+      box.textContent = "Waiting for the block…"; let rc = null; for (let i = 0; i < 60 && !rc; i++) { await new Promise((r) => setTimeout(r, 1500)); rc = await srpc("eth_getTransactionReceipt", [hash]); }
+      if (!rc || rc.status !== "0x1") throw new Error("the transaction did not confirm");
+      const next = [...seals.filter((s) => s.sha !== stateSha), { sha: stateSha, tx: hash, gen: siteState?.gen ?? null, at: new Date().toISOString() }];
+      const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify(next, null, 1)], { type: "application/json" })); a.download = "seals.json"; document.body.appendChild(a); a.click(); a.remove();
+      box.innerHTML = `✓ Sealed in block ${parseInt(rc.blockNumber, 16).toLocaleString("en-US")}. <a href="${SEXP}/tx/${hash}" target="_blank" rel="noopener">View transaction</a><br>seals.json was downloaded: upload it to the repository so every visitor sees the check.`;
+    } catch (e) { box.textContent = "Not sealed: " + (e.message || e); } };
+  } catch (e) { box.textContent = "Not sealed: " + (e.message || e); } };
+
+verifySeal();
 (async () => { try { sample = window.claude ? await window.claude.use("sample") : null; } catch { sample = null; } aiOn = !!sample; setMode(); })();
 </script>
 </body>
