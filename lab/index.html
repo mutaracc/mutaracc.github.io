@@ -1,0 +1,627 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#05060c">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mutara.cc/">
+<meta property="og:title" content="Mutara · AI minds written in DNA">
+<meta property="og:description" content="Twelve AI minds trade real Robinhood Chain prices in practice mode. The weakest die, the strongest breed. Nothing is signed.">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://mutara.cc/og.png">
+<meta name="twitter:image" content="https://mutara.cc/og.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<title>Mutation Lab · Mutara</title>
+<meta name="description" content="Twelve AI minds trade real Robinhood Chain prices in practice mode. The weakest die, the strongest breed new minds written in words.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+
+:root{color-scheme:dark;--bg:#05060c;--ink:#e8ecf6;--mute:#8a93ab;--dim:#4b5370;--line:rgba(140,160,255,.14);--card:rgba(10,12,24,.82);
+--mom:#4ef2c8;--dip:#ff8f6b;--gold:#ffd36b;--dead:#ff4d6d;--born:#9d8bff}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"JetBrains Mono",monospace;font-size:13px}
+a{color:inherit}
+header{position:absolute;inset:0 0 auto 0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:14px 22px;background:linear-gradient(var(--bg),transparent)}
+.logo{display:flex;gap:10px;align-items:center;font:800 20px Sora;letter-spacing:-.02em}
+.logo i{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff,var(--mom) 40%,#0b3a33 75%);box-shadow:0 0 18px var(--mom)}
+.pill{font:600 10.5px "JetBrains Mono";letter-spacing:.14em;padding:6px 10px;border:1px solid var(--line);border-radius:99px;color:var(--mute)}
+.pill b{color:var(--gold);font-weight:600}
+#stage{position:relative;height:100vh;min-height:620px;overflow:hidden}
+#c{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:grab}
+#c:active{cursor:grabbing}
+#labels{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.lb{position:absolute;transform:translate(-50%,-100%);font:600 10.5px "JetBrains Mono";white-space:nowrap;text-align:center;color:var(--ink);text-shadow:0 0 6px #000;transition:opacity .4s}
+.lb small{display:block;font-weight:500;color:var(--mute)}
+.lb.top{color:var(--gold)}
+.hero{position:absolute;left:24px;top:84px;max-width:460px;pointer-events:none}
+.hero .k{font:600 11px "JetBrains Mono";letter-spacing:.2em;color:var(--mom)}
+.hero h1{margin:12px 0 0;font:800 54px/0.98 Sora;letter-spacing:-.045em}
+.hero h1 em{font-style:normal;background:linear-gradient(90deg,var(--mom),var(--born));-webkit-background-clip:text;color:transparent}
+.hero p{margin:14px 0 0;color:var(--mute);line-height:1.6;max-width:400px}
+.genbar{position:absolute;left:24px;right:400px;bottom:24px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.gb{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;backdrop-filter:blur(8px)}
+.gb small{display:block;font-size:10px;letter-spacing:.14em;color:var(--dim)}
+.gb b{font:700 20px Sora}
+.gb b.g{color:var(--mom)}
+button{font:600 12px "JetBrains Mono";color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;cursor:pointer}
+button:hover{border-color:var(--mom)}
+.side{position:absolute;right:20px;top:76px;bottom:20px;width:350px;display:flex;flex-direction:column;gap:12px;overflow:auto;scrollbar-width:thin}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;backdrop-filter:blur(10px)}
+.card h3{margin:0 0 10px;font:700 11px "JetBrains Mono";letter-spacing:.18em;color:var(--mute);display:flex;justify-content:space-between}
+.card h3 span{color:var(--dim);letter-spacing:.05em}
+table{width:100%;border-collapse:collapse}
+td{padding:5px 0;border-bottom:1px solid rgba(140,160,255,.07);font-size:12px}
+td:last-child{text-align:right}
+tr{cursor:pointer}tr:hover td{color:#fff}
+tr.sel td{color:var(--gold)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;vertical-align:1px}
+.pos{color:var(--mom)}.neg{color:var(--dead)}
+.dna{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;font-size:12px}
+.dna div small{display:block;color:var(--dim);font-size:10px;letter-spacing:.1em}
+.dna .w{grid-column:1/-1}
+.log{font-size:11.5px;line-height:1.55;max-height:220px;overflow:auto}
+.log div{padding:4px 0;border-bottom:1px dashed rgba(140,160,255,.08)}
+.log .d{color:var(--dead)}.log .b{color:var(--born)}.log .g{color:var(--mute)}
+.hash{font-size:11px;word-break:break-all;color:var(--mute)}
+.tag{display:inline-block;font-size:10px;letter-spacing:.12em;padding:3px 7px;border-radius:6px;border:1px solid var(--line);color:var(--gold)}
+section{max-width:1080px;margin:0 auto;padding:80px 22px}
+section h2{font:800 40px/1.05 Sora;letter-spacing:-.04em;margin:0}
+section h2 em{font-style:normal;color:var(--mom)}
+section .lead{color:var(--mute);max-width:620px;line-height:1.7;margin-top:14px}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:36px}
+.step{border:1px solid var(--line);border-radius:16px;padding:20px;background:linear-gradient(180deg,rgba(78,242,200,.05),transparent)}
+.step small{color:var(--dim)}.step b{display:block;margin:10px 0 8px;font:700 19px Sora}.step p{margin:0;color:var(--mute);line-height:1.6;font-size:12.5px}
+.honest{margin-top:30px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.honest div{border:1px solid var(--line);border-radius:14px;padding:16px 18px;line-height:1.6;color:var(--mute)}
+.honest b{color:var(--ink);display:block;margin-bottom:4px;font-family:Sora}
+footer{border-top:1px solid var(--line);padding:26px 22px;text-align:center;color:var(--dim);font-size:11.5px}
+@media (max-width:960px){
+ #stage{height:auto;min-height:0;overflow:visible}
+ #c{position:relative;height:62vh;width:100%}
+ #labels{height:62vh}
+ .hero{position:relative;left:0;top:0;padding:80px 18px 0;max-width:none}
+ .hero h1{font-size:38px}
+ .genbar{position:relative;left:0;bottom:0;padding:12px 18px}
+ .side{position:relative;inset:auto;width:auto;padding:0 18px 20px;overflow:visible}
+ .steps{grid-template-columns:1fr 1fr}.honest{grid-template-columns:1fr}
+ header .pill:last-child{display:none}
+}
+@media (max-width:520px){.steps{grid-template-columns:1fr}section h2{font-size:30px}}
+
+
+.mode{font:600 10.5px "JetBrains Mono";letter-spacing:.12em;padding:6px 10px;border-radius:99px;border:1px solid var(--line)}
+.mode.ai{color:var(--mom);border-color:rgba(78,242,200,.4)}.mode.off{color:var(--dip);border-color:rgba(255,143,107,.4)}
+button.go{border-color:rgba(78,242,200,.55);color:var(--mom)}button:disabled{opacity:.45;cursor:default}
+button:focus-visible{outline:2px solid var(--mom);outline-offset:2px}
+.pipe{display:flex;flex-direction:column;gap:6px;font-size:12px}
+.pipe div{display:flex;justify-content:space-between;gap:8px;color:var(--dim)}
+.pipe div.on{color:var(--gold)}.pipe div.done{color:var(--mom)}
+.pipe div span:first-child{white-space:nowrap}
+.pipe div span:last-child{text-align:right;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:48%}
+.genome{font:500 13px/1.6 Sora;color:var(--ink)}
+.thought{margin-top:10px;padding:10px 12px;border-left:2px solid var(--born);background:rgba(157,139,255,.06);font-size:12px;line-height:1.55;color:#cfd3ff}
+.picks{margin-top:10px;font-size:12px}
+.picks div{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(140,160,255,.07)}
+.meta{margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;font-size:11.5px}
+.meta small{display:block;color:var(--dim);font-size:10px;letter-spacing:.1em}
+.mut{color:var(--born)}
+.artonly{display:none!important}
+body[data-view="helix"] section{display:none}
+body:not([data-view="helix"]) #stage{display:none}
+body[data-view="lab"] section:not(#lab),body[data-view="benchmark"] section:not(#bench),body[data-view="family"] section:not(#minds),body[data-view="seal"] section:not(#sealpage),body[data-view="how"] section:not(#how){display:none}
+body:not([data-view="helix"]) header{position:relative;background:var(--bg)}
+body:not([data-view="helix"]) section{padding-top:50px;min-height:70vh}
+.nav a.on{color:var(--ink);box-shadow:inset 0 -2px 0 var(--mom)}
+.sealgrid{margin-top:30px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+@media (max-width:860px){.sealgrid{grid-template-columns:1fr}}
+.sealbox{margin-top:10px;padding:10px 12px;border:1px solid rgba(255,211,107,.35);border-radius:10px;font-size:11.5px;line-height:1.55;color:var(--ink)}
+.sealbox .row2{display:flex;gap:8px;margin-top:8px}#onchain a{color:var(--mom)}
+.simple{margin-top:22px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.simple div{border:1px solid var(--line);border-radius:14px;padding:16px;line-height:1.6;color:var(--mute);font-size:12.5px}
+.simple b{display:block;color:var(--ink);font:700 16px Sora;margin-bottom:4px}
+.btab{margin-top:24px;overflow-x:auto;border:1px solid var(--line);border-radius:14px}
+.btab table{min-width:620px}.btab th,.btab td{padding:10px 14px;text-align:right;font-variant-numeric:tabular-nums}
+.btab th{font:600 10.5px "JetBrains Mono";letter-spacing:.12em;color:var(--dim);border-bottom:1px solid var(--line)}
+.btab th:first-child,.btab td:first-child{text-align:left}
+.btab tr.tot td{font-weight:600;border-top:1px solid var(--line);color:var(--ink)}
+.bv{margin-top:16px;padding:16px 18px;border-radius:14px;border:1px solid rgba(255,211,107,.35);background:rgba(255,211,107,.05);font:600 15px/1.55 Sora}
+.bv small{display:block;font:500 12px/1.5 "JetBrains Mono";color:var(--mute);margin-top:6px}
+.tree{margin-top:24px;display:flex;gap:12px;overflow-x:auto;padding-bottom:8px}
+.gcol{flex:0 0 190px;display:flex;flex-direction:column;gap:8px}
+.gcol h5{margin:0 0 2px;font:600 10.5px "JetBrains Mono";letter-spacing:.14em;color:var(--dim)}
+.mc{border:1px solid var(--line);border-radius:10px;padding:9px 10px;font-size:11.5px;cursor:pointer;background:rgba(10,12,24,.6)}
+.mc b{font:700 13px Sora}.mc.dead{opacity:.45;border-style:dashed}.mc.dead b{text-decoration:line-through}
+.mc.alive{border-color:rgba(78,242,200,.35)}.mc.sel{outline:2px solid var(--gold)}
+.mc span{display:block;color:var(--dim);margin-top:3px}
+.fam{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px}
+.fam div{border:1px solid var(--line);border-radius:99px;padding:6px 12px;font-size:12px}
+.fam b{color:var(--mom)}
+@media (max-width:760px){.simple{grid-template-columns:1fr}}
+
+.imp{font:600 12px "JetBrains Mono";color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;cursor:pointer}
+.imp:hover{border-color:var(--mom)}
+.nav{display:flex;gap:18px;font:600 12px "JetBrains Mono"}.nav a{text-decoration:none;color:var(--mute)}.nav a:hover{color:var(--ink)}
+@media (max-width:960px){.nav{display:none}}
+
+#lab{max-width:1240px}
+.labgrid{margin-top:30px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:16px}
+.lp{border:1px solid var(--line);border-radius:16px;padding:18px;background:rgba(10,12,24,.6);min-width:0}
+.lp h4{margin:0 0 12px;font:700 11px "JetBrains Mono";letter-spacing:.18em;color:var(--mute)}
+.lp label{display:block;font-size:10.5px;letter-spacing:.12em;color:var(--dim);margin:12px 0 6px}
+select,textarea{width:100%;font:500 13px/1.55 "JetBrains Mono";color:var(--ink);background:#0a0c18;border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+textarea{min-height:110px;resize:vertical;font-family:Sora}
+select:focus,textarea:focus{outline:2px solid var(--born);outline-offset:1px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:500 11.5px "JetBrains Mono";padding:6px 10px;border-radius:99px;border:1px solid rgba(157,139,255,.35);color:#cfc6ff;background:transparent;cursor:pointer}
+.chip:hover{background:rgba(157,139,255,.12)}
+.labbtns{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.cmp{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.col{border:1px solid var(--line);border-radius:12px;padding:14px;min-width:0}
+.col.orig{border-color:rgba(255,211,107,.3)}.col.mut{border-color:rgba(157,139,255,.45)}
+.col small{display:block;font-size:10px;letter-spacing:.14em;color:var(--dim)}
+.col .big2{font:700 26px Sora;margin:6px 0}
+.col .th{font-size:12px;line-height:1.55;color:#cfd3ff;margin:8px 0}
+.col .pk{font-size:11.5px;display:flex;justify-content:space-between;gap:8px;padding:3px 0;border-bottom:1px solid rgba(140,160,255,.07)}
+.verdict{margin-top:14px;padding:12px 14px;border-radius:12px;background:rgba(78,242,200,.06);border:1px solid rgba(78,242,200,.25);font:600 14px/1.5 Sora}
+.verdict.bad{background:rgba(255,77,109,.06);border-color:rgba(255,77,109,.3)}
+.labnote{margin-top:10px;font-size:11.5px;color:var(--dim);line-height:1.5}
+@media (max-width:960px){.labgrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body data-view="lab">
+<header>
+  <a class="logo" href="/" style="text-decoration:none;color:inherit"><i></i>Mutara</a>
+  <nav class="nav"><a href="/" data-v="helix">Helix</a><a href="/lab/" data-v="lab">Mutation Lab</a><a href="/benchmark/" data-v="benchmark">Benchmark</a><a href="/family/" data-v="family">Family tree</a><a href="/seal/" data-v="seal">Seal</a><a href="/how/" data-v="how">How it works</a></nav>
+  <div style="display:flex;gap:8px;align-items:center"><span class="mode off" id="mode">STARTING…</span><span class="pill"><b>●</b> PRACTICE MODE · NOTHING SIGNED</span></div>
+</header>
+
+<div id="stage">
+  <canvas id="c"></canvas>
+  <div id="labels"></div>
+  <div class="hero">
+    <div class="k">EVOLVING AI MINDS · ROBINHOOD CHAIN</div>
+    <h1>Minds written<br><em>in DNA.</em></h1>
+    <p>Twelve AI minds read real Robinhood Chain prices and decide, each in its own voice. Their DNA is a few sentences of belief. The weakest three die, and the strongest breed new minds. Click a node to read its mind.</p>
+  </div>
+  <div class="genbar">
+    <div class="gb"><small>GENERATION</small><b id="gen">0</b></div>
+    <div class="gb"><small>DECISION HOUR</small><b id="hour" style="font-size:15px">–</b></div>
+    <div class="gb"><small>BEST THIS GEN</small><b class="g" id="best">–</b></div>
+    <div class="gb"><small>ALIVE / DIED</small><b id="alive">12 / 0</b></div>
+    <button class="go" id="run">Run next generation →</button><button id="stop" hidden>Stop</button><button id="exp" class="artonly">Export for mutara.cc</button><label class="artonly imp" for="impf">Import state<input type="file" id="impf" accept=".json,application/json" hidden></label>
+  </div>
+  <div class="side">
+    <div class="card"><h3>THIS GENERATION <span id="pipeAt">–</span></h3><div class="pipe" id="pipe"></div></div>
+    <div class="card"><h3>LEADERBOARD <span>score remembers past gens</span></h3><table id="board"></table></div>
+    <div class="card"><h3>MIND <span id="mindName">–</span></h3><div id="mind"></div></div>
+    <div class="card"><h3>EVOLUTION LOG <span>newest first</span></h3><div class="log" id="log"></div></div>
+    <div class="card"><h3>SEAL <span class="tag">ROBINHOOD CHAIN MAINNET</span></h3><div class="hash" id="onchain">Checking the seal…</div><div class="sealbox" id="sealBox" hidden></div><button id="sealBtn" class="go" hidden style="margin-top:10px">Seal this state on chain</button><div class="hash" id="hash" style="margin-top:10px">–</div><div style="margin-top:8px;color:var(--dim);font-size:11px;line-height:1.5">The sha256 of this exact state.json is written into a Robinhood Chain transaction. Anyone can recompute it: if one thought or score were edited later, it would no longer match.</div></div>
+  </div>
+</div>
+
+<section id="lab">
+  <h2>Mutation <em>Lab.</em></h2>
+  <p class="lead">Change one sentence of a mind's DNA and replay the exact same hour. Same data, same rules, same next 24 hours. Only the belief changes, so any difference comes from the words you wrote.</p>
+  <div class="labgrid">
+    <div class="lp">
+      <h4>1 · PICK A RECORDED DECISION</h4>
+      <label for="labMind">MIND AND HOUR</label><select id="labMind"></select>
+      <label for="labDna">2 · EDIT ITS DNA</label><textarea id="labDna"></textarea>
+      <label>QUICK MUTATIONS</label>
+      <div class="chips" id="chips"></div>
+      <label for="labTier">3 · WHICH AI SPECIES THINKS</label>
+      <select id="labTier"><option value="quick">Quick (fastest model)</option><option value="default" selected>Standard</option><option value="complex">Deep (most capable model)</option></select>
+      <div class="labbtns"><button class="go" id="labRun">Replay this hour →</button><button id="labRace">Race all 3 species</button><button id="labReset">Reset DNA</button></div>
+      <div class="labnote" id="labNote">Uses Claude on your own account. One replay is one AI call; a race is three.</div>
+    </div>
+    <div class="lp">
+      <h4>RESULT · SAME HOUR, SAME NEXT 24H</h4>
+      <div class="cmp" id="cmp"></div>
+      <div id="verdict"></div>
+    </div>
+  </div>
+</section>
+
+<section id="bench">
+  <h2>Does evolution <em>beat doing nothing?</em></h2>
+  <p class="lead">Every generation, the minds are compared with three simple rivals on the same hour and the same next 24 hours. If evolution works, the evolving minds should beat all three over time.</p>
+  <div class="btab"><table id="btab"></table></div>
+  <div class="bv" id="bv">Run a few generations with AI to fill this table.</div>
+</section>
+
+<section id="minds">
+  <h2>The family <em>tree.</em></h2>
+  <p class="lead">Every mind that ever lived, by the generation it was born in. Crossed-out names died. Click a name to read its DNA.</p>
+  <div class="fam" id="fam"></div>
+  <div class="tree" id="tree"></div>
+</section>
+
+<section id="sealpage">
+  <h2>Sealed on <em>Robinhood Chain.</em></h2>
+  <p class="lead">Every published history of Mutara lives in one file, state.json. Its sha256 is written into a Robinhood Chain mainnet transaction. If anyone edited one thought, score or child afterwards, the hash would no longer match.</p>
+  <div class="sealgrid"><div id="sealSlot"></div>
+  <div class="card"><h3>EVERY SEAL <span>newest first</span></h3><div class="log" id="sealList">–</div></div></div>
+  <div class="honest" style="margin-top:20px"><div><b>Check it yourself</b>1. Download mutara.cc/state.json<br>2. Compute its sha256 (for example: sha256sum state.json)<br>3. Open the transaction on the explorer: its input is "MUTARA:" followed by that hash.</div>
+  <div><b>What the seal proves</b>That this exact history existed when the block was made, and has not changed since. It does not mean any money was traded: Mutara runs in practice mode.</div></div>
+</section>
+
+<section id="how">
+  <h2>In plain words.</h2>
+  <div class="simple">
+    <div><b>Twelve AI traders</b>Each one is Claude playing a character, described in a few sentences: what it believes, how bold it is, what it likes to buy.</div>
+    <div><b>A test on real prices</b>They all decide at the same past hour. Then the real next 24 hours of Robinhood Chain prices show who made or lost money. No real money is used.</div>
+    <div><b>Survival of the best</b>The three worst are removed. The three best have children that mix their beliefs. Over many rounds, the group should get smarter.</div>
+  </div>
+  <h2 style="margin-top:60px">How a generation<br><em>runs.</em></h2>
+  <p class="lead">Each step is shown live in the panel while it happens. The minds never see the future: they only get the data that existed at the decision hour.</p>
+  <div class="steps">
+    <div class="step"><small>READ</small><b>A market brief</b><p>31 Robinhood Chain markets at the decision hour: price, 1h, 6h and 24h moves, distance from the 24h high, round trip cost.</p></div>
+    <div class="step"><small>THINK</small><b>Twelve minds decide</b><p>Claude plays each mind strictly by its DNA and writes its thought, then up to three buys with size, take profit and stop loss.</p></div>
+    <div class="step"><small>GATE · SEAL</small><b>Rules, then a seal</b><p>A fixed risk gate trims every decision: 3 positions max, stops between 0.5% and 6%, no trade whose round trip eats half the stop. Then everything is hashed.</p></div>
+    <div class="step"><small>REVEAL · BREED</small><b>The next 24 hours decide</b><p>Real candles play out. The three weakest die. Claude writes three children, mixing their parents' beliefs with one mutation.</p></div>
+  </div>
+  <div class="honest">
+    <div><b>What is real</b>Hourly candles and round trip costs from KyberSwap quotes on Robinhood Chain mainnet, taken the morning of Nov 23. Every thought and child DNA in the published generations was written by Claude. Each update shows its time in the top bar.</div>
+    <div><b>What is not (yet)</b>No money moves. Rows marked rule stand-in were decided by a simple rule, not by AI. Generations are published by hand for now, automatic runs come next. Generations replay the last week of real candles. The on-chain seal is a concept.</div>
+  </div>
+</section>
+<footer>Mutara · mutara.cc · practice mode only, not financial advice · <a href="https://github.com/mutaracc/mutaracc.github.io" style="color:var(--mute)">GitHub</a></footer>
+
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+const $ = (i) => document.getElementById(i);
+const VIEW = document.body.dataset.view || "helix"; document.querySelectorAll(".nav a").forEach((a) => a.classList.toggle("on", a.dataset.v === VIEW));
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+const POP = 12, KILL = 3, LEN = 168, HOLD = 24;
+const D = await (await fetch("/markets.json")).json(), M = D.markets;
+const at = (m, i) => m.h[m.h.length - LEN + i];
+const pct = (v, d = 2) => (v >= 0 ? "+" : "") + v.toFixed(d) + "%";
+
+// ---------- the minds: DNA is a few sentences of belief ----------
+const SEED = [
+  ["Kavo", "patient", "dip", "I buy big tech only after it falls 2% or more under its 24-hour high. I hold a full day and never chase green candles."],
+  ["Rilu", "bold", "mom", "I follow strength. Whatever rose most in the last 6 hours, I buy, with a tight stop. Speed beats opinion."],
+  ["Seno", "patient", "contra", "I buy the biggest losers of the day. Crowds overreact, and I collect the bounce."],
+  ["Dama", "patient", "etf", "I only touch SPY, QQQ, GLD, SLV and USO. Small size, wide stop, calm money."],
+  ["Teri", "patient", "cheap", "Costs kill traders. I only trade markets whose round trip costs under 0.1%, and I size up when I'm sure."],
+  ["Nyx", "bold", "crypto", "I live in crypto and crypto stocks: ETH, BTC, COIN, MSTR, CRCL. When they move together, I join."],
+  ["Oru", "bold", "meme", "GME, AMC and HIMS are my playground. I buy momentum hard and take profit fast."],
+  ["Vela", "bold", "semi", "Semiconductors run the world. I buy the strongest chip stock of NVDA, AMD, MU, AVGO and INTC."],
+  ["Imo", "patient", "dip", "Quiet markets that slipped are my favourite. I buy the slip and wait for the price to come home."],
+  ["Lux", "patient", "div", "I never bet on one story. I spread across three different worlds: one stock, one ETF, one crypto."],
+  ["Zeta", "bold", "sniper", "I do nothing most hours. Only a 1% jump in one hour wakes me, and then I go big."],
+  ["Pell", "bold", "mom", "I buy breakouts: markets trading within 0.5% of their 24-hour high, before everyone notices."],
+];
+let siteState = null, siteStateText = null, nid = 0, gen = 0, died = 0, A = [], log = [], sel = null, thinking = false, abortC = null, sample = null, aiOn = false;
+const look = (m) => ({ st: m.temper === "bold" ? "mom" : "dip", sig: 0.6 + ((m.id.charCodeAt(0) * 7 + m.id.length * 13) % 30) / 10, mk: [0, 1, 2].slice(0, 2 + (m.id.length % 2)) });
+function mind(name, temper, tag, genome, parents = [], mutation = "") { const m = { id: `${name}-${++nid}`, temper, tag, genome, parents, mutation, born: gen, score: null, prior: null, last: null, thought: "", picks: [], by: "" }; m.dna = look(m); (globalThis.__ALL ||= []).push(m); return m; }
+SEED.forEach(([n, t, g, s]) => A.push(mind(n, t, g, s)));
+
+// ---------- the market brief at a decision hour: only data known then ----------
+const hourOf = (g) => 24 + (g * 12) % (LEN - 24 - HOLD - 1);
+const when = (i) => new Date(at(M[0], i)[0] * 1000).toISOString().slice(0, 16).replace("T", " ");
+function brief(t) { return M.map((m) => { const c = at(m, t), c1 = at(m, t - 1), c6 = at(m, t - 6), c24 = at(m, t - 24); if (!c || !c1 || !c6 || !c24) return null;
+  let hi = 0; for (let j = t - 24; j <= t; j++) { const x = at(m, j); if (x) hi = Math.max(hi, x[2]); }
+  return { s: m.s, px: c[4], d1: (c[4] / c1[4] - 1) * 100, d6: (c[4] / c6[4] - 1) * 100, d24: (c[4] / c24[4] - 1) * 100, off: (hi - c[4]) / hi * 100, cost: m.cost }; }).filter(Boolean); }
+const briefText = (b) => b.map((x) => `${x.s} ${x.px >= 100 ? x.px.toFixed(2) : x.px.toPrecision(4)} | 1h ${x.d1.toFixed(2)} | 6h ${x.d6.toFixed(2)} | 24h ${x.d24.toFixed(2)} | below high ${x.off.toFixed(2)} | rt ${x.cost.toFixed(2)}`).join("\n");
+
+// ---------- offline stand-in: simple rules per seed style (labelled, never called AI) ----------
+const UNI = { etf: ["SPY", "QQQ", "GLD", "SLV", "USO"], crypto: ["ETH", "BTC", "COIN", "MSTR", "CRCL"], meme: ["GME", "AMC", "HIMS"], semi: ["NVDA", "AMD", "MU", "AVGO", "INTC"], tech: ["NVDA", "AAPL", "AMZN", "GOOGL", "META", "MSFT", "TSLA"] };
+function standIn(m, b) { const tag = m.tag || "mom", pool = b.filter((x) => tag === "cheap" ? x.cost < .1 : UNI[tag] ? UNI[tag].includes(x.s) : tag === "dip" && m.genome.includes("big tech") ? UNI.tech.includes(x.s) : true);
+  let picks = [], why;
+  if (tag === "dip") { picks = pool.filter((x) => x.off > 1.5).sort((a, c) => c.off - a.off).slice(0, 2); why = "they slipped furthest under the 24h high"; }
+  else if (tag === "contra") { picks = [...pool].sort((a, c) => a.d24 - c.d24).slice(0, 2).filter((x) => x.d24 < -1); why = "they are today's biggest losers"; }
+  else if (tag === "sniper") { picks = pool.filter((x) => x.d1 > 1).sort((a, c) => c.d1 - a.d1).slice(0, 1); why = "it jumped over 1% in one hour"; }
+  else if (tag === "div") { picks = [UNI.tech, UNI.etf, UNI.crypto].map((u) => pool.filter((x) => u.includes(x.s)).sort((a, c) => c.d24 - a.d24)[0]).filter(Boolean); why = "one from each world"; }
+  else { picks = [...pool].sort((a, c) => c.d6 - a.d6).slice(0, 2).filter((x) => x.d6 > .2); why = "they are the strongest over 6 hours"; }
+  const bold = m.temper === "bold", w = picks.length ? (bold ? .9 : .6) / picks.length : 0;
+  return { thought: picks.length ? `Rule stand-in: buying ${picks.map((x) => x.s).join(" and ")} because ${why}.` : "Rule stand-in: nothing fits my rules this hour, so I wait.", picks: picks.map((x) => ({ s: x.s, w, tp: bold ? 2.5 : 4, sl: bold ? 1.5 : 3 })) }; }
+
+// ---------- the risk gate: fixed rules no mind can pass ----------
+function gate(d) { const out = [], notes = []; let tot = 0;
+  for (const p of (Array.isArray(d.picks) ? d.picks : []).slice(0, 3)) { const m = M.find((x) => x.s === String(p.s).toUpperCase()); if (!m) { notes.push(`${p.s}: unknown market`); continue; }
+    const sl = Math.min(6, Math.max(.5, +p.sl || 2)), tp = Math.min(15, Math.max(.5, +p.tp || 3)); let w = Math.min(1, Math.max(0, +p.w || 0));
+    if (m.cost > sl / 2) { notes.push(`${m.s}: round trip ${m.cost.toFixed(2)}% eats half the ${sl}% stop`); continue; }
+    if (tot + w > 1) w = Math.max(0, 1 - tot); if (w <= 0) continue; tot += w; out.push({ s: m.s, w: +w.toFixed(3), tp, sl }); }
+  return { picks: out, notes }; }
+
+// ---------- reveal: the next 24 real hours ----------
+function reveal(picks, t) { let ret = 0; const res = [];
+  for (const p of picks) { const m = M.find((x) => x.s === p.s), c = at(m, t), cost = m.cost / 200; if (!c) continue; const en = c[4] * (1 + cost); let px = null, how = "held 24h";
+    for (let i = t + 1; i <= t + HOLD; i++) { const x = at(m, i); if (!x) continue; if (x[3] <= en * (1 - p.sl / 100)) { px = en * (1 - p.sl / 100); how = "stop loss"; break; } if (x[2] >= en * (1 + p.tp / 100)) { px = en * (1 + p.tp / 100); how = "take profit"; break; } }
+    if (!px) px = (at(m, t + HOLD) || c)[4]; const r = (px * (1 - cost)) / en - 1; ret += p.w * r; res.push({ ...p, r: r * 100, how }); }
+  return { ret: ret * 100, res }; }
+
+// ---------- the AI ----------
+async function think(b, t) {
+  const prompt = `You are running 12 trading minds in a practice-mode evolution experiment on Robinhood Chain mainnet data (tokenized stocks, ETFs and crypto, quoted in USDG). Spot only: a mind can buy or stay out, it cannot short.
+It is ${when(t)} UTC. This is ALL the data known at that hour (symbol price | % change 1h | 6h | 24h | % below 24h high | round trip cost %):
+${briefText(b)}
+
+MINDS (id: DNA). Each mind must act strictly by its own DNA, even when it is a bad idea:
+${A.map((m) => `${m.id}: ${m.genome}`).join("\n")}
+
+For EACH mind decide what to buy now, to hold up to 24 hours: 0 to 3 picks, each with w (fraction of its practice balance, all picks together at most 1), tp (take profit %) and sl (stop loss %). Staying out is allowed.
+Reply with only a JSON array, one object per mind in the same order:
+[{"id":"${A[0].id}","thought":"one sentence, max 25 words, first person, in the mind's own voice, naming the numbers it used","picks":[{"s":"NVDA","w":0.4,"tp":3,"sl":2}]}]`;
+  return sample.json(prompt, { signal: abortC.signal, cache: false });
+}
+async function breed(pairs) {
+  const prompt = `Three new trading minds are born in an evolution experiment. For each pair of parents write the child's DNA: 1 or 2 sentences, max 40 words, first person, keeping the strongest belief of each parent, plus exactly ONE small mutation (a new belief or a changed number). Give a temper ("bold" or "patient") and a short two-syllable name.
+${pairs.map(([a, c], i) => `Pair ${i + 1}:\n  A (${a.score.toFixed(2)}%): ${a.genome}\n  B (${c.score.toFixed(2)}%): ${c.genome}`).join("\n")}
+Reply with only a JSON array of 3 objects in pair order: [{"name":"Ravi","dna":"...","mutation":"the new belief, max 10 words","temper":"bold"}]`;
+  return sample.json(prompt, { signal: abortC.signal, cache: false, modelTier: "quick" });
+}
+
+// ---------- one generation ----------
+const STEPS = [["read", "Read market brief"], ["think", "Minds think"], ["gate", "Risk gate"], ["seal", "Seal decisions"], ["reveal", "Reveal next 24h"], ["breed", "Weakest die, strongest breed"]];
+const PS = {}; const step = (k, state, txt = "") => { PS[k] = { state, txt }; $("pipe").innerHTML = STEPS.map(([id, n]) => `<div class="${PS[id]?.state || ""}"><span>${PS[id]?.state === "done" ? "✓" : PS[id]?.state === "on" ? "●" : "○"} ${n}</span><span>${esc(PS[id]?.txt || "")}</span></div>`).join(""); };
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+function note(cls, t) { log.unshift({ cls, t: `G${gen} · ${t}` }); log = log.slice(0, 120); }
+async function sha(o) { const h = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(JSON.stringify(o))); return "0x" + [...new Uint8Array(h)].map((x) => x.toString(16).padStart(2, "0")).join(""); }
+
+async function runGen(first = false) {
+  const t = hourOf(gen), b = brief(t); for (const k of STEPS) delete PS[k[0]]; $("pipeAt").textContent = `G${gen} · ${when(t)} UTC`; $("hour").textContent = when(t).slice(5);
+  step("read", "done", `${b.length} markets at ${when(t).slice(11)} UTC`);
+  let decided = null, by = "stand-in";
+  if (aiOn && !first) { step("think", "on", "Claude is thinking…"); thinking = true; abortC = new AbortController(); $("stop").hidden = false; $("run").disabled = true;
+    try { const r = await think(b, t); if (Array.isArray(r)) { decided = A.map((m, i) => r.find((x) => x && x.id === m.id) || r[i] || { thought: "(no answer)", picks: [] }); by = "AI"; } }
+    catch (e) { thinking = false; $("stop").hidden = true; $("run").disabled = false;
+      if (e.code === "cancelled") { step("think", "", "stopped"); render(); return; }
+      if (["not_granted", "sampling_disabled", "not_declared", "capability_disabled", "capability_removed"].includes(e.code)) { aiOn = false; setMode(); }
+      note("g", `AI unavailable (${e.code}) · rule stand-in used`); }
+    thinking = false; $("stop").hidden = true; }
+  if (!decided) decided = A.map((m) => standIn(m, b));
+  step("think", "done", by === "AI" ? "12 thoughts by Claude" : "rule stand-in");
+  let trimmed = 0; A.forEach((m, i) => { const d = decided[i] || {}, g = gate(d); m.thought = String(d.thought || "").slice(0, 240); m.picks = g.picks; m.gateNotes = g.notes; m.by = by; trimmed += g.notes.length; });
+  step("gate", "done", trimmed ? `${trimmed} pick${trimmed > 1 ? "s" : ""} refused` : "all picks passed"); render();
+  const seal = await sha({ gen, hour: when(t), by, minds: A.map((m) => ({ id: m.id, thought: m.thought, picks: m.picks })) });
+  $("hash").textContent = `G${gen} · ${seal}`; step("seal", "done", seal.slice(0, 18) + "…"); if (!first) await sleep(900);
+  for (const m of A) { m.last = reveal(m.picks, t); (m.history ||= []).push({ gen, t, when: when(t), by: m.by, thought: m.thought, res: m.last.res, ret: m.last.ret }); const base = m.score ?? m.prior; m.score = base == null ? m.last.ret : base * .5 + m.last.ret * .5; }
+  benchAdd(t, by); A.sort((x, y) => y.score - x.score); step("reveal", "done", `best ${pct(Math.max(...A.map((m) => m.last.ret)))}`);
+  note("g", `${by === "AI" ? "AI" : "stand-in"} decisions sealed ${seal.slice(0, 10)}… · champion ${A[0].id}`); render();
+  labOptions(); if (first) { step("breed", "", "press Run"); $("run").disabled = false; return; }
+  // evolution
+  step("breed", "on", "writing children…"); const dead = A.slice(-KILL), top = A.slice(0, 3), pairs = [[top[0], top[1]], [top[0], top[2]], [top[1], top[2]]];
+  let kidsSpec = null;
+  if (aiOn) { abortC = new AbortController(); $("stop").hidden = false; thinking = true;
+    try { const r = await breed(pairs); if (Array.isArray(r) && r.length >= 3) kidsSpec = r.slice(0, 3); } catch (e) { if (e.code === "cancelled") note("g", "breeding stopped · stand-in children"); }
+    thinking = false; $("stop").hidden = true; }
+  for (const d of dead) { d.diedAt = gen; died++; note("d", `${d.id} died · ${pct(d.score)} · lived ${gen - d.born} gen`); fx.kill(d); }
+  A = A.slice(0, POP - KILL); gen++;
+  pairs.forEach(([p, q], i) => { const s = kidsSpec?.[i]; const nm = String(s?.name || p.id.split("-")[0].slice(0, 2) + q.id.split("-")[0].slice(-2)).replace(/[^A-Za-z]/g, "").slice(0, 8) || "Kid";
+    const k = mind(nm.charAt(0).toUpperCase() + nm.slice(1).toLowerCase(), s?.temper === "patient" || s?.temper === "bold" ? s.temper : p.temper, p.tag,
+      s?.dna ? String(s.dna).slice(0, 300) : `${p.genome.split(". ")[0].replace(/\.$/, "")}. ${q.genome.split(". ").slice(-1)[0]}`, [p.id, q.id], s?.mutation ? String(s.mutation).slice(0, 90) : "none (stand-in)");
+    k.prior = (p.score + q.score) / 2; k.born = gen; k.score = k.prior; k.last = { ret: 0, res: [] }; k.thought = "Just born. I will decide next generation."; k.by = kidsSpec ? "AI" : "stand-in";
+    A.push(k); fx.born(k); note("b", `${k.id} born · ${p.id} × ${q.id}${kidsSpec ? " · mutation: " + k.mutation : ""}`); });
+  labOptions(); renderTree(); A.sort((x, y) => y.score - x.score); step("breed", "done", kidsSpec ? "3 children by Claude" : "3 stand-in children"); $("run").disabled = false; render();
+}
+
+// ---------- UI ----------
+const colr = (m, i) => i === 0 ? "var(--gold)" : m.temper === "bold" ? "var(--mom)" : "var(--dip)";
+function render() {
+  $("gen").textContent = gen; $("alive").textContent = `${A.length} / ${died}`; const best = Math.max(...A.map((m) => m.last?.ret ?? -99)); $("best").textContent = best > -99 ? pct(best) : "–";
+  $("board").innerHTML = A.map((m, i) => `<tr data-id="${m.id}" class="${sel === m.id ? "sel" : ""}"><td><span class="dot" style="background:${colr(m, i)}"></span>${i + 1}. ${esc(m.id)}</td><td style="color:var(--dim)">${m.temper}</td><td class="${(m.score ?? 0) >= 0 ? "pos" : "neg"}">${m.score == null ? "–" : pct(m.score)}</td></tr>`).join("");
+  $("board").querySelectorAll("tr").forEach((tr) => tr.onclick = () => { sel = tr.dataset.id; render(); });
+  const m = A.find((x) => x.id === sel) || A[0]; $("mindName").textContent = m.id + (m === A[0] ? " · champion" : "");
+  const res = m.last?.res || [], rmap = Object.fromEntries(res.map((r) => [r.s, r]));
+  $("mind").innerHTML = `<div class="genome">"${esc(m.genome)}"</div>
+   ${m.thought ? `<div class="thought"><b style="color:var(--born);font-weight:600">${m.by === "AI" ? "THOUGHT · by Claude" : "THOUGHT · rule stand-in"}</b><br>${esc(m.thought)}</div>` : ""}
+   <div class="picks">${m.picks.length ? m.picks.map((p) => { const r = rmap[p.s]; return `<div><span>${esc(p.s)} · ${(p.w * 100).toFixed(0)}% · tp ${p.tp}% · sl ${p.sl}%</span><span class="${r ? (r.r >= 0 ? "pos" : "neg") : ""}">${r ? pct(r.r) + " · " + r.how : "pending"}</span></div>`; }).join("") : `<div><span style="color:var(--dim)">no picks this hour</span><span></span></div>`}
+   ${(m.gateNotes || []).map((n) => `<div style="color:var(--dead)"><span>gate refused: ${esc(n)}</span><span></span></div>`).join("")}</div>
+   <div class="meta"><div><small>TEMPER</small>${m.temper}</div><div><small>BORN</small>gen ${m.born}</div>
+   <div><small>THIS GEN</small><span class="${(m.last?.ret ?? 0) >= 0 ? "pos" : "neg"}">${m.last ? pct(m.last.ret) : "–"}</span></div><div><small>SCORE</small>${m.score == null ? "–" : pct(m.score)}</div>
+   <div style="grid-column:1/-1"><small>PARENTS</small>${m.parents.length ? esc(m.parents.join(" × ")) : "first generation"}</div>
+   ${m.mutation ? `<div style="grid-column:1/-1"><small>MUTATION</small><span class="mut">${esc(m.mutation)}</span></div>` : ""}</div>`;
+  $("log").innerHTML = log.map((l) => `<div class="${l.cls}">${esc(l.t)}</div>`).join("");
+}
+function setMode() { const el = $("mode"); el.className = "mode " + (aiOn ? "ai" : "off"); el.textContent = aiOn ? "● AI MINDS: CLAUDE" : siteState ? "● AI MINDS: CLAUDE · UPDATED " + siteState.at.slice(5, 16).replace("T", " ") + " UTC" : "● AI MINDS START SOON · RULE STAND-IN"; if (siteState) el.className = "mode ai"; $("run").textContent = aiOn ? "Run next generation with AI →" : "Run next generation →"; }
+$("run").onclick = () => runGen();
+$("stop").onclick = () => abortC?.abort();
+// ---------- the helix: every agent is a node on one living strand of DNA ----------
+const cv = $("c"), R = new THREE.WebGLRenderer({ canvas: cv, antialias: true }); R.setPixelRatio(Math.min(devicePixelRatio, 2)); R.setClearColor(0x05060c);
+const S = new THREE.Scene(); S.fog = new THREE.FogExp2(0x05060c, .035);
+const cam = new THREE.PerspectiveCamera(48, 1, .1, 200); cam.position.set(0, 8, 25);
+const ctl = new OrbitControls(cam, cv); ctl.enableDamping = true; ctl.autoRotate = true; ctl.autoRotateSpeed = .6; ctl.minDistance = 3; ctl.maxDistance = 34; ctl.enablePan = false; ctl.target.set(0, 5.6, 0);
+const H = 13, RADH = 2.6, TURN = 0.62; // height, radius, radians per level
+const helixAt = (lvl, strand) => { const a = lvl * TURN + strand * Math.PI; return new THREE.Vector3(Math.cos(a) * RADH, lvl * (H / 11), Math.sin(a) * RADH); };
+const DNA = new THREE.Group(); S.add(DNA);
+// two strands of dots, rungs of dots, faint history strands below
+{ const add = (pts, color, size, op) => { const g = new THREE.BufferGeometry().setFromPoints(pts); const m = new THREE.Points(g, new THREE.PointsMaterial({ color, size, transparent: true, opacity: op, blending: THREE.AdditiveBlending, depthWrite: false })); DNA.add(m); return m; };
+  const s0 = [], s1 = [], rung = [], hist = [];
+  for (let l = -0.6; l <= 11.6; l += 0.012) { s0.push(helixAt(l, 0)); s1.push(helixAt(l, 1)); }
+  for (let l = 0; l <= 11; l += 0.5) { const a = helixAt(l, 0), b = helixAt(l, 1); for (let k = 0.08; k < .93; k += 0.035) rung.push(a.clone().lerp(b, k)); }
+  for (let l = -9; l < -0.6; l += 0.02) for (const st of [0, 1]) { const p = helixAt(l, st); p.x *= 1 + (-l) * .05; p.z *= 1 + (-l) * .05; hist.push(p); }
+  add(s0, 0x4ef2c8, .07, .9); add(s1, 0x9d8bff, .07, .9); add(rung, 0x7d8ae0, .055, .8); add(hist, 0x2a3160, .05, .6);
+  const g = new THREE.BufferGeometry(), p = []; for (let x = -30; x <= 30; x += 1.1) for (let z = -30; z <= 30; z += 1.1) if (x * x + z * z < 900) p.push(x, -7.6, z);
+  g.setAttribute("position", new THREE.Float32BufferAttribute(p, 3)); S.add(new THREE.Points(g, new THREE.PointsMaterial({ color: 0x1c2246, size: .05 }))); }
+// floating dust
+const dust = (() => { const g = new THREE.BufferGeometry(), p = []; for (let i = 0; i < 900; i++) p.push((Math.random() - .5) * 40, Math.random() * 24 - 6, (Math.random() - .5) * 40);
+  g.setAttribute("position", new THREE.Float32BufferAttribute(p, 3)); const m = new THREE.Points(g, new THREE.PointsMaterial({ color: 0x3a4380, size: .04, transparent: true, opacity: .7 })); S.add(m); return m; })();
+// where rank i sits: rank 0 (champion) at the top of the strand, alternating strands
+const rankPos = (i) => helixAt(11 - i, i % 2);
+
+// a node: a small cell of dots and lines, shaped by its DNA
+function creature(a) {
+  const n = 120, pts = [], spike = a.dna.sig / 4, w = .38 + a.dna.mk.length * .03, h = a.dna.st === "mom" ? 1.25 : .8;
+  let s2 = a.id.split("").reduce((v, c) => v * 31 + c.charCodeAt(0), 7) >>> 0; const rr = () => ((s2 = (s2 * 1664525 + 1013904223) >>> 0) / 4294967296);
+  for (let i = 0; i < n; i++) { const y = 1 - (i / (n - 1)) * 2, r = Math.sqrt(1 - y * y), th = i * 2.399963, k = 1 + (rr() - .5) * spike;
+    pts.push(new THREE.Vector3(Math.cos(th) * r * w * k, y * w * h * k, Math.sin(th) * r * w * k)); }
+  const g = new THREE.BufferGeometry().setFromPoints(pts), lines = [];
+  for (let i = 0; i < n; i++) for (let j = i + 1; j < Math.min(n, i + 12); j++) if (pts[i].distanceTo(pts[j]) < .3) lines.push(pts[i], pts[j]);
+  const c = new THREE.Color(a.dna.st === "mom" ? 0x4ef2c8 : 0xff8f6b);
+  const pm = new THREE.PointsMaterial({ color: c, size: .06, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false });
+  const lm = new THREE.LineBasicMaterial({ color: c, transparent: true, opacity: .35, blending: THREE.AdditiveBlending, depthWrite: false });
+  const grp = new THREE.Group(); grp.add(new THREE.Points(g, pm), new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(lines), lm));
+  const heart = new THREE.Mesh(new THREE.SphereGeometry(.12, 16, 16), new THREE.MeshBasicMaterial({ color: c })); grp.add(heart);
+  const halo = new THREE.Mesh(new THREE.TorusGeometry(.75, .015, 8, 64), new THREE.MeshBasicMaterial({ color: 0xffd36b, transparent: true, opacity: 0 })); grp.add(halo);
+  grp.userData = { a, pm, lm, halo, heart, base: pts, g, life: 0, dying: 0 };
+  const lab = document.createElement("div"); lab.className = "lb"; $("labels").appendChild(lab); grp.userData.lab = lab;
+  grp.position.copy(rankPos(11)).add(new THREE.Vector3(0, -1.5, 0)); grp.scale.setScalar(.001); DNA.add(grp); return grp;
+}
+const bodies = new Map(), effects = [];
+const fx = {
+  kill(a) { const b = bodies.get(a.id); if (!b) return; b.userData.dying = .001; b.userData.vel = b.userData.base.map(() => new THREE.Vector3((Math.random() - .5) * 1.6, -Math.random() * 1.5, (Math.random() - .5) * 1.6)); bodies.delete(a.id); effects.push(b); },
+  born(k) { const b = creature(k); bodies.set(k.id, b); b.userData.from = k.parents.map((id) => bodies.get(id)).filter(Boolean);
+    // particles stream from both parents into the newborn
+    for (const p of b.userData.from) { const n = 60, g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.Float32BufferAttribute(new Float32Array(n * 3), 3));
+      const m = new THREE.Points(g, new THREE.PointsMaterial({ color: 0x9d8bff, size: .09, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }));
+      m.userData = { stream: 1, t: 0, from: p, to: b, off: Array.from({ length: n }, () => Math.random()) }; DNA.add(m); effects.push(m); } }
+};
+for (const a of A) { const b = creature(a); bodies.set(a.id, b); b.position.copy(rankPos(A.indexOf(a))); }
+
+const ray = new THREE.Raycaster(), mouse = new THREE.Vector2(); ray.params.Points.threshold = .12;
+cv.addEventListener("click", (e) => { const r = cv.getBoundingClientRect(); mouse.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1); ray.setFromCamera(mouse, cam);
+  const hit = ray.intersectObjects([...bodies.values()], true)[0]; if (hit) { let o = hit.object; while (o && !o.userData.a) o = o.parent; if (o) { sel = o.userData.a.id; render(); } } });
+function size() { const w = cv.clientWidth, h = cv.clientHeight; R.setSize(w, h, false); cam.aspect = w / h; if (w > 960) cam.setViewOffset(w, h, 170, 0, w, h); else cam.clearViewOffset(); cam.updateProjectionMatrix(); }
+addEventListener("resize", size); size();
+const clock = new THREE.Clock(), v = new THREE.Vector3(), wp = new THREE.Vector3(), a3 = new THREE.Vector3();
+(function loop() { const dt = Math.min(clock.getDelta(), .05), t = clock.elapsedTime; ctl.update(); dust.rotation.y += dt * .01;
+  const rank = new Map(A.map((a, i) => [a.id, i]));
+  for (const b of bodies.values()) { const u = b.userData, i = rank.get(u.a.id) ?? 11; u.life = Math.min(1, u.life + dt * .6);
+    const goal = rankPos(i); goal.y += Math.sin(t * 1.4 + i) * .06; b.position.lerp(goal, .045);
+    const target = (1.25 - i * .04) * (u.a.score >= 0 ? 1 : .85); b.scale.setScalar(THREE.MathUtils.lerp(b.scale.x, target * u.life, .08)); b.rotation.y += dt * (.3 + (11 - i) * .03);
+    u.halo.material.opacity = i === 0 ? .75 + Math.sin(t * 3) * .2 : 0; u.halo.rotation.x = t * .8; u.halo.rotation.y = t * .5; u.heart.scale.setScalar(thinking ? 1.2 + Math.abs(Math.sin(t * 9 + i)) * 1.4 : 1 + Math.sin(t * (4 + (11 - i) * .35)) * .3);
+    u.pm.color.set(i === 0 ? 0xffd36b : u.a.dna.st === "mom" ? 0x4ef2c8 : 0xff8f6b); u.lm.color.copy(u.pm.color); u.heart.material.color.copy(u.pm.color);
+    b.getWorldPosition(wp); v.copy(wp).setY(wp.y + .75 * b.scale.y).project(cam); const vis = v.z < 1, x = (v.x + 1) / 2 * cv.clientWidth, y = (1 - v.y) / 2 * cv.clientHeight;
+    u.lab.style.left = x + "px"; u.lab.style.top = y + "px"; u.lab.style.opacity = vis ? 1 : 0; u.lab.className = "lb" + (i === 0 ? " top" : "");
+    u.lab.innerHTML = `${i === 0 ? "♛ " : ""}${u.a.id}<small>${thinking ? "thinking…" : ((u.a.score ?? 0) >= 0 ? "+" : "") + (u.a.score ?? 0).toFixed(2) + "%"}</small>`; }
+  for (let k = effects.length - 1; k >= 0; k--) { const e = effects[k], u = e.userData;
+    if (u.stream) { u.t += dt; const pos = e.geometry.attributes.position; for (let j = 0; j < pos.count; j++) { const f = Math.min(1, Math.max(0, u.t * .8 - u.off[j] * .6)); a3.copy(u.from.position).lerp(u.to.position, f); a3.y += Math.sin(f * Math.PI) * 1.2; pos.setXYZ(j, a3.x, a3.y, a3.z); }
+      pos.needsUpdate = true; e.material.opacity = Math.max(0, 1 - Math.max(0, u.t - 1.6)); if (u.t > 2.6) { DNA.remove(e); effects.splice(k, 1); } continue; }
+    u.dying += dt; const pos = u.g.attributes.position; for (let j = 0; j < pos.count; j++) { pos.setXYZ(j, pos.getX(j) + u.vel[j].x * dt, pos.getY(j) + u.vel[j].y * dt, pos.getZ(j) + u.vel[j].z * dt); u.vel[j].y -= dt * 2; } pos.needsUpdate = true;
+    e.position.y -= dt * 1.5; u.pm.color.set(0xff4d6d); u.pm.opacity = Math.max(0, 1 - u.dying / 2); u.lm.opacity = Math.max(0, .35 - u.dying / 2); u.heart.visible = false; u.halo.visible = false; u.lab.style.opacity = Math.max(0, 1 - u.dying);
+    if (u.dying > 2.1) { DNA.remove(e); u.lab.remove(); effects.splice(k, 1); } }
+  if (VIEW === "helix") R.render(S, cam); requestAnimationFrame(loop); })();
+
+// ---------- Benchmark: evolving minds vs three simple rivals, same hour, same next 24h ----------
+const BENCH = [];
+let rs = 7; const rrand = () => ((rs = (rs * 1664525 + 1013904223) >>> 0) / 4294967296);
+function rivals(t) { const b = brief(t);
+  const frozen = SEED.map(([n, tp, g, s]) => { const fake = { tag: g, temper: tp, genome: s }; const d = standIn(fake, b); return reveal(gate(d).picks, t).ret; });
+  const spy = reveal([{ s: "SPY", w: 1, tp: 15, sl: 6 }], t).ret;
+  rs = 7 + t; const rnd = Array.from({ length: 12 }, () => { const ps = [0, 1].map(() => b[Math.floor(rrand() * b.length)].s); return reveal(gate({ picks: [...new Set(ps)].map((x) => ({ s: x, w: .45, tp: 3, sl: 2 })) }).picks, t).ret; });
+  const avg = (a) => a.reduce((p, c) => p + c, 0) / a.length; return { frozen: avg(frozen), spy, random: avg(rnd) }; }
+function benchAdd(t, by) { const r = rivals(t), rets = A.map((m) => m.last.ret); BENCH.push({ gen, when: when(t), by, minds: rets.reduce((p, c) => p + c, 0) / rets.length, best: Math.max(...rets), ...r }); renderBench(); }
+function renderBench() { const rows = BENCH.filter((x) => x.by === "AI"), all = BENCH;
+  const cell = (v) => `<td class="${v >= 0 ? "pos" : "neg"}">${pct(v)}</td>`;
+  const sum = (k, arr) => arr.reduce((p, c) => p + c[k], 0) / Math.max(1, arr.length);
+  $("btab").innerHTML = `<tr><th>GENERATION · HOUR</th><th>DECIDED BY</th><th>EVOLVING MINDS (AVG)</th><th>FROZEN GEN 0</th><th>JUST HOLD SPY</th><th>RANDOM PICKS</th></tr>` +
+    all.map((x) => `<tr><td>G${x.gen} · ${x.when.slice(5)}</td><td style="color:var(--dim)">${x.by === "AI" ? "Claude" : "rule stand-in"}</td>${cell(x.minds)}${cell(x.frozen)}${cell(x.spy)}${cell(x.random)}</tr>`).join("") +
+    (rows.length ? `<tr class="tot"><td>Average · AI generations</td><td>${rows.length}</td>${cell(sum("minds", rows))}${cell(sum("frozen", rows))}${cell(sum("spy", rows))}${cell(sum("random", rows))}</tr>` : "");
+  if (!rows.length) { $("bv").innerHTML = "No AI generation yet. Press Run next generation with AI to start the comparison.<small>Generation 0 uses the rule stand-in, so it does not count.</small>"; return; }
+  const me = sum("minds", rows), rv = { "frozen generation 0": sum("frozen", rows), "holding SPY": sum("spy", rows), "random picks": sum("random", rows) }, beat = Object.entries(rv).filter(([, v]) => me > v).map(([k]) => k);
+  $("bv").innerHTML = `${rows.length < 10 ? "Too early to say." : beat.length === 3 ? "Evolution is winning so far." : "Evolution is not winning yet."} After ${rows.length} AI generation${rows.length > 1 ? "s" : ""}, the minds average ${pct(me)} per 24 hours${beat.length ? `, ahead of ${beat.join(", ")}` : ", behind every rival"}.<small>${rows.length < 10 ? `Fewer than 10 generations is not enough evidence. A verdict needs at least 10.` : "Averages over replayed real hours, practice mode, costs included."}</small>`; }
+
+// ---------- Family tree ----------
+const ALL = globalThis.__ALL;
+function founders(m) { if (!m.parents.length) return [m.id.split("-")[0]]; return [...new Set(m.parents.flatMap((p) => { const q = ALL.find((x) => x.id === p); return q ? founders(q) : []; }))]; }
+function renderTree() { const gens = [...new Set(ALL.map((m) => m.born))].sort((a, b) => a - b), alive = new Set(A.map((m) => m.id));
+  $("tree").innerHTML = gens.map((g) => `<div class="gcol"><h5>BORN IN G${g}</h5>${ALL.filter((m) => m.born === g).map((m) => `<div class="mc ${alive.has(m.id) ? "alive" : "dead"} ${sel === m.id ? "sel" : ""}" data-id="${m.id}"><b>${esc(m.id)}</b><span>${m.parents.length ? esc(m.parents.join(" × ")) : "founder"}</span><span>${alive.has(m.id) ? "alive · " + (m.score == null ? "–" : pct(m.score)) : "died after G" + m.diedAt}</span></div>`).join("")}</div>`).join("");
+  $("tree").querySelectorAll(".mc").forEach((c) => c.onclick = () => { if (false) {} else { const m = ALL.find((x) => x.id === c.dataset.id); c.querySelector("span").textContent = m.genome; } });
+  const fam = {}; for (const m of A) for (const f of founders(m)) fam[f] = (fam[f] || 0) + 1;
+  $("fam").innerHTML = `<div style="border:0;color:var(--dim)">Founder families still alive:</div>` + Object.entries(fam).sort((a, b) => b[1] - a[1]).map(([f, n]) => `<div>${esc(f)} <b>${n}</b></div>`).join(""); }
+
+// ---------- Mutation Lab ----------
+const CHIPS = [["+ fear of loss", "I am afraid of losing: I keep stops tight and size small."], ["+ greed", "When I see a chance I go all in."], ["+ ETFs only", "I only trade SPY, QQQ, GLD, SLV and USO."], ["+ cost hater", "I refuse any market with a round trip over 0.1%."], ["+ contrarian", "I buy what fell the most today."], ["+ patience", "If nothing is clear, I stay out."]];
+let labCtl = null;
+const rec = (m) => m.history?.at(-1);
+function labOptions() { const cur = $("labMind").value; $("labMind").innerHTML = A.filter((m) => rec(m)).map((m) => { const r = rec(m); return `<option value="${m.id}">${esc(m.id)} · G${r.gen} · ${r.when.slice(5)} UTC · ${r.by}</option>`; }).join("");
+  if ([...$("labMind").options].some((o) => o.value === cur)) $("labMind").value = cur; }
+function labPick() { const m = A.find((x) => x.id === $("labMind").value); if (!m) return; $("labDna").value = m.genome; labShow(m, []); }
+function colHtml(cls, title, sub, d) { return `<div class="col ${cls}"><small>${title}</small><div class="big2 ${d.ret >= 0 ? "pos" : "neg"}">${pct(d.ret)}</div><small>${esc(sub)}</small><div class="th">${esc(d.thought || "–")}</div>${d.res.length ? d.res.map((p) => `<div class="pk"><span>${esc(p.s)} · ${(p.w * 100).toFixed(0)}% · tp ${p.tp} · sl ${p.sl}</span><span class="${p.r >= 0 ? "pos" : "neg"}">${pct(p.r)} · ${p.how}</span></div>`).join("") : `<div class="pk"><span style="color:var(--dim)">stayed out</span><span></span></div>`}${(d.notes || []).map((n) => `<div class="pk" style="color:var(--dead)"><span>gate refused: ${esc(n)}</span><span></span></div>`).join("")}</div>`; }
+function labShow(m, muts) { const r = rec(m); $("cmp").innerHTML = colHtml("orig", "ORIGINAL · " + (r.by === "AI" ? "by Claude" : "rule stand-in"), `"${m.genome.slice(0, 90)}${m.genome.length > 90 ? "…" : ""}"`, { thought: r.thought, res: r.res, ret: r.ret }) + muts.map((x) => colHtml("mut", x.title, x.sub, x)).join("");
+  const best = muts.filter((x) => !x.err); $("verdict").innerHTML = best.length ? best.map((x) => { const dd = x.ret - r.ret, same = JSON.stringify(x.res.map((p) => p.s).sort()) === JSON.stringify(r.res.map((p) => p.s).sort());
+      return `<div class="verdict ${dd < 0 ? "bad" : ""}">${esc(x.title)}: ${same ? "same markets" : "different markets"}, ${dd === 0 ? "no change in result" : (dd > 0 ? "better by " : "worse by ") + Math.abs(dd).toFixed(2) + " points"}.</div>`; }).join("") : ""; }
+async function labAsk(m, dna, tier) { const r = rec(m), b = brief(r.t);
+  const prompt = `You are one trading mind in a practice-mode experiment on Robinhood Chain mainnet data (tokenized stocks, ETFs and crypto, in USDG). Spot only: buy or stay out, no shorting.
+It is ${r.when} UTC. This is ALL the data known at that hour (symbol price | % change 1h | 6h | 24h | % below 24h high | round trip cost %):
+${briefText(b)}
+
+YOUR DNA (act strictly by it, even when it is a bad idea):
+${dna}
+
+Decide what to buy now, to hold up to 24 hours: 0 to 3 picks with w (fraction of balance, total at most 1), tp (take profit %) and sl (stop loss %).
+Reply with only one JSON object: {"thought":"one sentence, max 25 words, first person, naming the numbers you used","picks":[{"s":"NVDA","w":0.4,"tp":3,"sl":2}]}`;
+  const d = await sample.json(prompt, { signal: labCtl.signal, cache: false, modelTier: tier }); const g = gate(d || {}), out = reveal(g.picks, r.t);
+  return { thought: String(d?.thought || "").slice(0, 240), res: out.res, ret: out.ret, notes: g.notes }; }
+const TIER = { quick: "Quick", default: "Standard", complex: "Deep" };
+async function labRun(tiers) { const m = A.find((x) => x.id === $("labMind").value); if (!m || !sample || !aiOn) { $("labNote").textContent = "The Mutation Lab runs in the Mutara preview with Claude. Results of new runs are published here."; return; }
+  const dna = $("labDna").value.trim().slice(0, 500); if (!dna) return; labCtl = new AbortController(); $("labRun").disabled = $("labRace").disabled = true;
+  const muts = tiers.map((t) => ({ title: "MUTANT · " + TIER[t], sub: dna === m.genome ? "same DNA, new AI run" : `"${dna.slice(0, 90)}${dna.length > 90 ? "…" : ""}"`, thought: "Thinking…", res: [], ret: 0, err: true })); labShow(m, muts);
+  $("labNote").textContent = `Replaying ${rec(m).when} UTC with ${tiers.length} AI call${tiers.length > 1 ? "s" : ""}…`;
+  await Promise.all(tiers.map(async (t, i) => { try { Object.assign(muts[i], await labAsk(m, dna, t), { err: false }); } catch (e) { muts[i].thought = e.code === "cancelled" ? "stopped" : `AI unavailable (${e.code})`; if (e.code === "not_granted") { aiOn = false; setMode(); } } labShow(m, muts); }));
+  $("labRun").disabled = $("labRace").disabled = false; $("labNote").textContent = "Done. Same hour, same data, same rules. Only the DNA or the AI species changed."; }
+$("chips").innerHTML = CHIPS.map(([n], i) => `<button class="chip" data-i="${i}">${n}</button>`).join("");
+$("chips").querySelectorAll(".chip").forEach((c) => c.onclick = () => { $("labDna").value = ($("labDna").value.trim() + " " + CHIPS[+c.dataset.i][1]).trim(); });
+$("labMind").onchange = labPick; $("labReset").onclick = labPick;
+$("labRun").onclick = () => labRun([$("labTier").value]); $("labRace").onclick = () => labRun(["quick", "default", "complex"]);
+
+// ---------- save and restore the whole population (export from the preview, shown on mutara.cc) ----------
+function snapshot() { return { kind: "mutara-state", v: 1, at: new Date().toISOString(), gen, died, nid, A, ALL: globalThis.__ALL, BENCH, log, seal: $("hash").textContent, by: A[0]?.by || "" }; }
+function restore(s) {
+  if (!s || s.kind !== "mutara-state") throw new Error("not a Mutara state file");
+  for (const b of bodies.values()) { DNA.remove(b); b.userData.lab.remove(); } bodies.clear();
+  gen = s.gen; died = s.died; nid = s.nid; globalThis.__ALL.length = 0; globalThis.__ALL.push(...s.ALL);
+  const byId = new Map(globalThis.__ALL.map((m) => [m.id, m])); A = s.A.map((m) => byId.get(m.id) || m);
+  BENCH.length = 0; BENCH.push(...(s.BENCH || [])); log = s.log || []; $("hash").textContent = s.seal || "–";
+  for (const a of A) { const b = creature(a); bodies.set(a.id, b); b.position.copy(rankPos(A.indexOf(a))); }
+  for (const k of STEPS) step(k[0], "done", k[0] === "read" ? "saved " + s.at.slice(0, 16).replace("T", " ") + " UTC" : ""); $("pipeAt").textContent = `G${gen} · restored`;
+  render(); renderBench(); renderTree(); labOptions(); labPick(); }
+$("exp").onclick = async () => { const dl = window.claude ? await window.claude.use("downloads") : null; if (!dl) { note("g", "export unavailable in this view"); render(); return; }
+  try { await dl.save({ filename: "state.json", data: JSON.stringify(snapshot()) }); note("g", "exported state.json · upload it to the mutaracc.github.io repository"); } catch (e) { note("g", `export ${e.code === "declined" ? "cancelled" : "failed (" + e.code + ")"}`); } render(); };
+$("impf").onchange = async (e) => { const f = e.target.files?.[0]; if (!f) return; try { restore(JSON.parse(await f.text())); note("g", `imported ${f.name} · continuing from G${gen}`); } catch (err) { note("g", "import failed: " + err.message); } render(); e.target.value = ""; };
+
+try { const r = await fetch("/state.json?t=" + Date.now(), { cache: "no-store" }); if (r.ok) { siteStateText = await r.text(); siteState = JSON.parse(siteStateText); } } catch {}
+setMode(); $("mode").textContent = "LOADING…"; await runGen(true); labOptions(); labPick(); renderTree();
+if (siteState) { try { restore(siteState); $("run").hidden = true; } catch { siteState = null; } } setMode();
+
+// ---------- on-chain seal: sha256 of state.json in a 0 ETH self-transfer on Robinhood Chain mainnet ----------
+const SRPC = "https://rpc.mainnet.chain.robinhood.com", SCHAIN = "0x1237", SEXP = "https://robinhoodchain.blockscout.com", SPREFIX = "4d55544152413a"; // "MUTARA:"
+let stateSha = null, seals = [];
+async function srpc(m, p) { const r = await fetch(SRPC, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: m, params: p }) }); const j = await r.json(); if (j.error) throw new Error(j.error.message); return j.result; }
+async function shaHex(t) { const h = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(t)); return [...new Uint8Array(h)].map((x) => x.toString(16).padStart(2, "0")).join(""); }
+function renderSealList() { const L = $("sealList"); if (!L) return; L.innerHTML = seals.length ? [...seals].reverse().map((s) => `<div class="g">G${s.gen ?? "?"} · ${String(s.at).slice(0, 16).replace("T", " ")} UTC · sha256 ${s.sha.slice(0, 12)}… · <a href="${SEXP}/tx/${s.tx}" target="_blank" rel="noopener" style="color:var(--mom)">${s.tx.slice(0, 12)}…</a></div>`).join("") : "No seals yet."; }
+if (VIEW === "seal") { const card = $("onchain").closest(".card"); $("sealSlot").appendChild(card); }
+async function verifySeal() { const el = $("onchain");
+  if (!siteStateText) { el.textContent = "Nothing published yet to seal."; return; }
+  stateSha = await shaHex(siteStateText);
+  try { const r = await fetch("/seals.json?t=" + Date.now(), { cache: "no-store" }); if (r.ok) seals = await r.json(); } catch {}
+  const hit = seals.find((s) => s.sha === stateSha);
+  renderSealList(); if (!hit) { el.innerHTML = `This state is not sealed yet.<br>sha256 ${stateSha.slice(0, 20)}…`; $("sealBtn").hidden = false; return; }
+  try { const [tx, rc] = await Promise.all([srpc("eth_getTransactionByHash", [hit.tx]), srpc("eth_getTransactionReceipt", [hit.tx])]);
+    const ok = tx && rc && rc.status === "0x1" && tx.input.toLowerCase() === "0x" + SPREFIX + stateSha && tx.to && tx.from.toLowerCase() === tx.to.toLowerCase();
+    if (!ok) { el.textContent = "✗ The seal record does not match the chain."; return; }
+    const blk = await srpc("eth_getBlockByNumber", [rc.blockNumber, false]);
+    el.innerHTML = `✓ Sealed on Robinhood Chain mainnet · block ${parseInt(rc.blockNumber, 16).toLocaleString("en-US")} · ${new Date(parseInt(blk.timestamp, 16) * 1000).toISOString().slice(0, 16).replace("T", " ")} UTC<br><a href="${SEXP}/tx/${hit.tx}" target="_blank" rel="noopener">${hit.tx.slice(0, 20)}…</a>`;
+  } catch { el.textContent = "Could not reach Robinhood Chain to check the seal."; } }
+$("sealBtn").onclick = async () => { const w = window.okxwallet || window.ethereum, box = $("sealBox"); box.hidden = false;
+  if (!w) { box.textContent = "Open mutara.cc in a browser with a wallet (OKX, MetaMask) to seal."; return; }
+  try { box.textContent = "Connecting wallet…"; const [from] = await w.request({ method: "eth_requestAccounts" });
+    try { await w.request({ method: "wallet_switchEthereumChain", params: [{ chainId: SCHAIN }] }); }
+    catch (e) { if (e.code === 4902) await w.request({ method: "wallet_addEthereumChain", params: [{ chainId: SCHAIN, chainName: "Robinhood Chain", rpcUrls: [SRPC], nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 }, blockExplorerUrls: [SEXP] }] }); else throw e; }
+    const tx = { from, to: from, value: "0x0", data: "0x" + SPREFIX + stateSha };
+    box.textContent = "Simulating on Robinhood Chain mainnet…";
+    const sim = await srpc("eth_simulateV1", [{ blockStateCalls: [{ calls: [tx] }], validation: false }, "latest"]), c = sim[0].calls[0];
+    if (c.status !== "0x1") throw new Error("simulation failed, nothing was signed");
+    const gas = parseInt(c.gasUsed, 16), price = BigInt(await srpc("eth_gasPrice", [])), fee = Number(BigInt(gas) * price) / 1e18;
+    box.innerHTML = `<b>Simulated ✓</b> You send <b>0 ETH to yourself</b> (${from.slice(0, 6)}…${from.slice(-4)}) on Robinhood Chain mainnet. The data field is "MUTARA:" + the sha256 of this state.json. Network fee about ${fee.toPrecision(2)} ETH.<div class="row2"><button class="go" id="sealYes">Sign seal</button><button id="sealNo">Cancel</button></div>`;
+    $("sealNo").onclick = () => { box.hidden = true; };
+    $("sealYes").onclick = async () => { try { box.textContent = "Confirm in your wallet…";
+      const hash = await w.request({ method: "eth_sendTransaction", params: [{ ...tx, gas: "0x" + Math.ceil(gas * 1.3).toString(16) }] });
+      box.textContent = "Waiting for the block…"; let rc = null; for (let i = 0; i < 60 && !rc; i++) { await new Promise((r) => setTimeout(r, 1500)); rc = await srpc("eth_getTransactionReceipt", [hash]); }
+      if (!rc || rc.status !== "0x1") throw new Error("the transaction did not confirm");
+      const next = [...seals.filter((s) => s.sha !== stateSha), { sha: stateSha, tx: hash, gen: siteState?.gen ?? null, at: new Date().toISOString() }];
+      const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify(next, null, 1)], { type: "application/json" })); a.download = "seals.json"; document.body.appendChild(a); a.click(); a.remove();
+      box.innerHTML = `✓ Sealed in block ${parseInt(rc.blockNumber, 16).toLocaleString("en-US")}. <a href="${SEXP}/tx/${hash}" target="_blank" rel="noopener">View transaction</a><br>seals.json was downloaded: upload it to the repository so every visitor sees the check.`;
+    } catch (e) { box.textContent = "Not sealed: " + (e.message || e); } };
+  } catch (e) { box.textContent = "Not sealed: " + (e.message || e); } };
+
+verifySeal();
+(async () => { try { sample = window.claude ? await window.claude.use("sample") : null; } catch { sample = null; } aiOn = !!sample; setMode(); })();
+</script>
+</body>
+</html>
